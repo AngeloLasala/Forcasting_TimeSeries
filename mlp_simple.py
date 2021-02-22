@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     #Elbow curve
     plt.figure()
-    plt.plot(history.history['loss'], label='train_loss') #funzione a gomito dalla quale si deve scegliere il valore ottimale delle epoche
+    plt.plot(history.history['loss'], label='train_loss') 
     plt.plot(history.history['val_loss'], label='val_loss')
     plt.grid()
     plt.legend()

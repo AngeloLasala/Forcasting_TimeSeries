@@ -58,10 +58,13 @@ def split_sequences(*sequences, target=None, n_steps=0):
 if __name__ == "__main__":
     data1 = np.linspace(10,200,20)
     data2 = data1 + 5
+    data3 = data1 + 200
+    data4 = data3 + 5 
 
-    X_train = np.stack((data1,data2), axis=-1)
-    X_train, y_train= split_sequences(data1, data2, target=data1, n_steps=3)
-    
+    X_train, y_train = split_sequences(data1, data2, target=data1, n_steps=3)
+    X_test, y_test = split_sequences(data3, data4, target=data3, n_steps=3)
+    print(X_train[0],y_train[0])
+    print(X_test[0],y_test[0])
     #Model
     input1 = Input(shape=(3,2,))
     hidden1 = Dense(200, activation='relu')(input1) 
@@ -72,4 +75,19 @@ if __name__ == "__main__":
     model = Model(inputs=[input1, input2], outputs=outputs)
     model.compile(loss='mse', optimizer='adam')
 
-    plot_model(model)
+    #Training
+    X_train= np.asarray(X_train).astype(np.float32)
+    history = model.fit([X_train[0],X_train[1]],y_train ,validation_split=0.3, epochs=300, verbose=1)
+
+    #Prediction 
+    X_test= np.asarray(X_test).astype(np.float32)
+    y_pred = model.predict([X_test[0],X_test[1]])
+    print(y_pred, y_test)
+
+    #Elbow curve
+    plt.figure()
+    plt.plot(history.history['loss'], label='train_loss') 
+    plt.plot(history.history['val_loss'], label='val_loss')
+    plt.grid()
+    plt.legend()
+    plt.show()
