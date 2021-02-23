@@ -1,8 +1,8 @@
 """Multi-steps time-series forcasting using MLP"""
 import numpy as np
 import matplotlib.pyplot as plt
-# from keras.layers import Input, Dense
-# from keras.models import Model
+from keras.layers import Input, Dense
+from keras.models import Model
 
 
 def split_sequences(sequence, n_steps_input, n_steps_output=1):
@@ -46,20 +46,16 @@ if __name__ == "__main__":
 
     X_train = np.asarray(X_train).astype(np.float32)
     y_train = np.asarray(y_train).astype(np.float32) 
-
-    for e,i in zip (X_train, y_train):
-        print(e,i)  
-    print(X_train.shape, y_train.shape)
-
-    # #Model
-    # inputs = Input(shape=(4,))
-    # hidden = Dense(300, activation='relu')(inputs)
-    # outputs = Dense(2, activation='linear')(hidden)
-    # model = Model(inputs=inputs, outputs=outputs)
-    # model.compile(loss='mse', optimizer='adam')
+    
+    #Model
+    inputs = Input(shape=(4,))
+    hidden = Dense(300, activation='relu')(inputs)
+    outputs = Dense(2, activation='linear')(hidden)
+    model = Model(inputs=inputs, outputs=outputs)
+    model.compile(loss='mse', optimizer='adam')
    
-    # print(len(X_train), y_train[83])
-    # #Training
-    # X_train = np.asarray(X_train).astype(np.float32)
-    # y_train = np.asarray(y_train).astype(np.float32)
-    # history = model.fit(X_train, y_train, validation_split=0.2, epochs=20, verbose=1)
+    print(len(X_train), y_train[83])
+    #Training
+    X_train = np.asarray(X_train).astype(np.float32)
+    y_train = np.asarray(y_train).astype(np.float32)
+    history = model.fit(X_train, y_train, validation_split=0.2, epochs=20, verbose=1)
