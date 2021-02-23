@@ -19,7 +19,10 @@ def split_sequences(sequence, n_steps):
     Results
     -------
     X: numpy array
-        numpy array 
+        Arrey of the input set, its shape is (len(sequences)-n_steps, n_steps) 
+
+    y: numpy array
+        Arrey of the input target, its shape is (len(sequences)-n_steps, 1)
     """
 
     X = [sequence[i:i+n_steps] for i in range(len(sequence)-n_steps)]
