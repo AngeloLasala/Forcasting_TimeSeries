@@ -7,18 +7,18 @@ from keras.utils import plot_model
 
 def split_sequences(*sequences, target=None, n_steps=0):
     """
-    Split a time series in a data frame in wich each row is composed by n_steps data. 
-    The number of time series is arbitrary because for each time we could be more than one 
+    Split a time series in a data frame in wich each row is composed by n_steps data.
+    The number of time series is arbitrary because for each time we could be more than one
     features (attributes) but the target clas is univariate.
-    Element of *sequences and target must be the same shape. 
+    Element of *sequences and target must be the same shape.
 
     Parameters
     ----------
     *sequences: list, numpy array
         times series data used to forcast the class label, it could be a list or numpy array.
-    
+
     target: list, numpy array(optional)
-       target class,  it could be a list or numpy array. if None the output is only the stack 
+       target class,  it could be a list or numpy array. if None the output is only the stack
        of the *sequences and it means there isn't a target
 
     n_steps: integer(optional)
@@ -49,7 +49,7 @@ def split_sequences(*sequences, target=None, n_steps=0):
         Xy_train = X_train
         y_train = target
 
-    if (target is None) and (n_steps > 0): 
+    if (target is None) and (n_steps > 0):
         Xy_train = [np.array(X_train[i:i+n_steps]) for i in range(len(X_train)-n_steps)]
         y_train = target
 
@@ -59,34 +59,36 @@ if __name__ == "__main__":
     data1 = np.linspace(10,200,20)
     data2 = data1 + 5
     data3 = data1 + 200
-    data4 = data3 + 5 
+    data4 = data3 + 5
 
     X_train, y_train = split_sequences(data1, data2, target=data1, n_steps=3)
     X_test, y_test = split_sequences(data3, data4, target=data3, n_steps=3)
     print(X_train[0],y_train[0])
     print(X_test[0],y_test[0])
+
     #Model
-    input1 = Input(shape=(3,2,))
-    hidden1 = Dense(200, activation='relu')(input1) 
-    input2 = Input(shape=(3,2,))
+    input1 = Input(shape=(3,))
+    hidden1 = Dense(200, activation='relu')(input1)
+    input2 = Input(shape=(3,))
     hidden2 = Dense(200, activation='relu')(input2)
     merge = Concatenate()([hidden1, hidden2])
-    outputs = Dense(1, activation='linear')(merge) 
+    outputs = Dense(1, activation='linear')(merge)
     model = Model(inputs=[input1, input2], outputs=outputs)
     model.compile(loss='mse', optimizer='adam')
 
     #Training
     X_train= np.asarray(X_train).astype(np.float32)
-    history = model.fit([X_train[0],X_train[1]],y_train ,validation_split=0.3, epochs=300, verbose=1)
+    history = model.fit([X_train[:,:,0],X_train[:,:,1]],y_train ,
+                        validation_split=0.3, epochs=300, verbose=1)
 
-    #Prediction 
+    #Prediction
     X_test= np.asarray(X_test).astype(np.float32)
-    y_pred = model.predict([X_test[0],X_test[1]])
+    y_pred = model.predict([X_test[:,:,1],X_test[:,:,1]])
     print(y_pred, y_test)
 
     #Elbow curve
     plt.figure()
-    plt.plot(history.history['loss'], label='train_loss') 
+    plt.plot(history.history['loss'], label='train_loss')
     plt.plot(history.history['val_loss'], label='val_loss')
     plt.grid()
     plt.legend()
