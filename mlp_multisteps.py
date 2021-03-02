@@ -8,19 +8,19 @@ from keras.models import Model
 def split_sequences(sequence, n_steps_input, n_steps_output=1):
     """
     Split a time series in a data frame in wich each row is composed by n_steps_input data,
-    the target is also multi-steps array defined by n_steps_output
+    the target is also multi-steps array defined by n_steps_output.
     The output is composed by the splited dataset X and the target class y
 
     Parameters
     ----------
     sequence: list, numpy array
-        times series data to split, it coulnd be a list or numpy array
+        times series data to split, it could be a list or numpy array
 
     n_steps_input: integer
         number of time steps for each istance in input data
 
     n_steps_output: integer(optional)
-        default 1. Number pf time steps for output target.
+        default 1. Number of time steps for output target.
 
     Results
     -------
